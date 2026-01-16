@@ -1,0 +1,264 @@
+/* --------------------------------
+   COLOR SYSTEM (EDITORIAL)
+-------------------------------- */
+.wrapper {
+  --bg-main: #e6e7db;
+  --bg-dark: #121212;
+  --text-main: #1c1c1c;
+  --text-muted: #6b6b6b;
+  --accent: #ff2a2a;
+  --overlay-dark: rgba(0, 0, 0, 0.45);
+  --overlay-soft: rgba(0, 0, 0, 0.18);
+
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* --------------------------------
+   NAV
+-------------------------------- */
+.nav {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: 100%;
+  padding: 2rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  z-index: 20;
+}
+
+.nav p {
+  pointer-events: auto;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+/* --------------------------------
+   BASE SECTION
+-------------------------------- */
+.section {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* --------------------------------
+   SECTION TYPES
+-------------------------------- */
+.intro {}
+.about {}
+.services {}
+.cta {}
+.outro {}
+.bannerImg {}
+
+/* --------------------------------
+   BACKGROUND IMAGE
+-------------------------------- */
+.sectionBg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.sectionBg img,
+.bgImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.05);
+}
+
+/* overlay gradient */
+.sectionBg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--overlay-dark),
+    var(--overlay-soft)
+  );
+  z-index: 1;
+}
+
+/* --------------------------------
+   CONTENT LAYER
+-------------------------------- */
+.section > :not(.sectionBg) {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* --------------------------------
+   TYPO WIDTH CONTROL
+-------------------------------- */
+.section h1 {
+  width: 72%;
+}
+
+.section p {
+  width: 58%;
+  color: var(--text-muted);
+}
+
+/* --------------------------------
+   COLOR ACCENTS
+-------------------------------- */
+.intro h1,
+.services h1,
+.outro h1 {
+  color: var(--accent);
+  text-shadow:
+    0 0 25px rgba(255, 42, 42, 0.35),
+    0 0 60px rgba(255, 42, 42, 0.15);
+}
+
+/* --------------------------------
+   GSAP BLOCK REVEAL
+-------------------------------- */
+.wrapper .block-line-wrapper {
+  position: relative;
+  width: max-content;
+  display: block;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.wrapper .block-line {
+  position: relative;
+  display: block;
+  z-index: 2;
+  will-change: transform, opacity;
+}
+
+.wrapper .block-revealer {
+  position: absolute;
+  inset: -2%;
+  background: var(--bg-dark);
+  transform-origin: left center;
+  z-index: 1;
+  will-change: transform;
+}
+
+/* --------------------------------
+   DEPTH & CINEMATIC POLISH
+-------------------------------- */
+.section:not(.bannerImg) {
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.05),
+    transparent 65%
+  );
+}
+
+/* vignette */
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+/* --------------------------------
+   SCROLL PROGRESS
+-------------------------------- */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform-origin: left;
+  background: linear-gradient(
+    to right,
+    var(--accent),
+    transparent
+  );
+  scale: 0 1;
+  z-index: 30;
+}
+
+/* --------------------------------
+   SCROLL HINT
+-------------------------------- */
+.scrollHint {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  color: #fff;
+  animation: float 2.4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 0.8;
+  }
+}
+
+/* --------------------------------
+   FOOTER
+-------------------------------- */
+.footer {
+  padding: 4rem 2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+.block-line-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.block-line {
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+
+.block-revealer {
+  position: absolute;
+  inset: -2%;
+  z-index: 1;
+}
+
+/* --------------------------------
+   RESPONSIVE
+-------------------------------- */
+@media (max-width: 1000px) {
+  .section {
+    padding: 2rem;
+  }
+
+  .section h1,
+  .section p {
+    width: 100%;
+  }
+
+  .nav {
+    padding: 1.5rem;
+  }
+}
