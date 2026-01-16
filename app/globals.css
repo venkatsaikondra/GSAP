@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600&display=swap");
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 /* --------------------------------
    ROOT
 -------------------------------- */
@@ -9,7 +11,8 @@
   --tone-300: #5b5c57;
   --tone-400: #e3e4d8;
   --tone-500: #fe0100;
-
+   --bg:#1a1a1a;
+    --fg:#edf1e8;
   --ease-smooth: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
@@ -17,4 +20,7 @@
   box-sizing: border-box;
   padding: 0%;
   margin: 0%;
+}
+body{
+  font-family: "manrope",sans-serif;
 }

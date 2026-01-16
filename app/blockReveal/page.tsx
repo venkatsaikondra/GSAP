@@ -30,7 +30,7 @@ export default function Home() {
           />
         </div>
 
-        <Copy animatedScroll={false} lift blur reveal="words">
+        <Copy animatedScroll={false}>
           <h1>
             Framed in tungsten and shadows, every shot holds its own deliberate
             tension. Silence, motion, and light collide to tell a story beyond
@@ -38,7 +38,6 @@ export default function Home() {
           </h1>
         </Copy>
 
-        {/* Scroll hint */}
         <span className={styles.scrollHint}>Scroll</span>
       </section>
 
@@ -90,7 +89,7 @@ export default function Home() {
 
       {/* CTA */}
       <section className={`${styles.section} ${styles.cta}`}>
-        <Copy direction="right" fade lift>
+        <Copy direction="right">
           <p>
             Whether it’s a brand, a moment, or a memory — we transform ideas into
             striking visual stories that stay with you long after the screen
@@ -110,7 +109,7 @@ export default function Home() {
           />
         </div>
 
-        <Copy direction="left" blur reveal="words">
+        <Copy direction="left">
           <h1>
             Every ending is a quiet beginning. What remains is the feeling —
             unresolved, powerful, and unforgettable.

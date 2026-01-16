@@ -151,6 +151,30 @@
   z-index: 1;
   will-change: transform;
 }
+.block-line-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.block-line {
+  display: block;
+}
+
+.block-revealer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.copy-typing {
+  will-change: transform, opacity;
+}
+
+.copy-char {
+  display: inline-block;
+  white-space: pre;
+}
+
 
 /* --------------------------------
    DEPTH & CINEMATIC POLISH

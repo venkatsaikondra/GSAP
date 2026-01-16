@@ -12,73 +12,37 @@ type CopyProps = {
   children: React.ReactNode;
   animatedScroll?: boolean;
   delay?: number;
-  blockColor?: string;
   stagger?: number;
   duration?: number;
   direction?: "left" | "right";
   once?: boolean;
+  variant?: "typing" | "block" | "hybrid";
+  blockColor?: string;
 };
 
 export default function Copy({
   children,
   animatedScroll = true,
   delay = 0,
-  blockColor = "#111",
-  stagger = 0.08,
-  duration = 0.6,
+  stagger = 0.04,
+  duration = 0.8,
   direction = "left",
   once = true,
+  variant = "hybrid",
+  blockColor = "#111",
 }: CopyProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
-    (context) => {
+    () => {
       const container = containerRef.current;
       if (!container) return;
 
+      /* Reduced motion */
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         gsap.set(container, { opacity: 1 });
         return;
       }
-
-      const lines: HTMLElement[] = [];
-      const blocks: HTMLElement[] = [];
-      const splits: SplitText[] = [];
-
-      Array.from(container.children).forEach((el) => {
-        const split = new SplitText(el as HTMLElement, {
-          type: "lines",
-          linesClass: "block-line",
-        });
-
-        splits.push(split);
-
-        split.lines.forEach((line) => {
-          const wrapper = document.createElement("div");
-          wrapper.className = "block-line-wrapper";
-
-          line.parentNode?.insertBefore(wrapper, line);
-          wrapper.appendChild(line);
-
-          const block = document.createElement("div");
-          block.className = "block-revealer";
-          block.style.backgroundColor = blockColor;
-
-          wrapper.appendChild(block);
-
-          lines.push(line);
-          blocks.push(block);
-        });
-      });
-
-      // INITIAL STATE
-      gsap.set(lines, { opacity: 0 });
-
-      gsap.set(blocks, {
-        scaleX: 0,
-        transformOrigin:
-          direction === "left" ? "left center" : "right center",
-      });
 
       const tl = gsap.timeline({
         delay,
@@ -91,58 +55,92 @@ export default function Copy({
           : undefined,
       });
 
-      lines.forEach((line, i) => {
-        const block = blocks[i];
-        const at = i * stagger;
+      /* HYBRID MODE */
+      if (variant === "hybrid") {
+        const headings = container.querySelectorAll("h1, h2, h3");
+        const paragraphs = container.querySelectorAll("p");
 
-        // BLOCK IN
-        tl.to(
-          block,
-          {
-            scaleX: 1,
-            duration,
-            ease: "power4.inOut",
-          },
-          at
-        )
+        /* BLOCK REVEAL — HEADINGS */
+        headings.forEach((el) => {
+          const split = new SplitText(el as HTMLElement, {
+            type: "lines",
+            linesClass: "block-line",
+          });
 
-          // TEXT APPEARS (NO EASING)
-          .set(
-            line,
-            {
-              opacity: 1,
-            },
-            at + duration * 0.45
-          )
+          split.lines.forEach((line) => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "block-line-wrapper";
 
-          // FLIP BLOCK ORIGIN
-          .set(block, {
-            transformOrigin:
-              direction === "left" ? "right center" : "left center",
-          })
+            line.parentNode?.insertBefore(wrapper, line);
+            wrapper.appendChild(line);
 
-          // BLOCK OUT
-          .to(
-            block,
-            {
+            const block = document.createElement("div");
+            block.className = "block-revealer";
+            block.style.backgroundColor = blockColor;
+
+            wrapper.appendChild(block);
+
+            gsap.set(line, { opacity: 0, y: 16 });
+            gsap.set(block, {
               scaleX: 0,
-              duration,
-              ease: "power4.inOut",
-            },
-            at + duration * 0.5
-          );
-      });
+              transformOrigin:
+                direction === "left" ? "left center" : "right center",
+            });
+
+            tl.to(block, {
+              scaleX: 1,
+              duration: duration * 0.6,
+              ease: "expo.inOut",
+            })
+              .to(
+                line,
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: duration * 0.6,
+                  ease: "power4.out",
+                },
+                "-=0.2"
+              )
+              .to(block, {
+                scaleX: 0,
+                duration: duration * 0.6,
+                ease: "expo.inOut",
+              });
+          });
+        });
+
+        /* TYPING REVEAL — PARAGRAPHS (NO BLUR) */
+        paragraphs.forEach((el) => {
+          const split = new SplitText(el as HTMLElement, {
+            type: "chars",
+            charsClass: "copy-char",
+          });
+
+          gsap.set(split.chars, {
+            opacity: 0,
+            y: "0.4em",
+          });
+
+          tl.to(split.chars, {
+            opacity: 1,
+            y: 0,
+            duration,
+            ease: "power4.out",
+            stagger,
+          });
+        });
+      }
 
       return () => {
-        splits.forEach((s) => s.revert());
-        context.revert();
+        ScrollTrigger.getAll().forEach((t) => t.kill());
       };
     },
     { scope: containerRef }
   );
 
   return (
-    <div ref={containerRef} data-copy-wrapper>
+    <div ref={containerRef} style={{ opacity: 1 }}>
       {children}
     </div>
   );
